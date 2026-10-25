@@ -6,5 +6,6 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+WORKDIR /app
 
 CMD ["python", "payments_api.py"]

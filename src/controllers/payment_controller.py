@@ -42,7 +42,7 @@ def process_payment(payment_id, credit_card_data):
         "is_paid": update_result["is_paid"]
     }
     # TODO: appelez la méthode correctement
-    update_order(0, False)
+    update_order(update_result["order_id"], update_result["is_paid"])
 
     return result
     
@@ -54,4 +54,14 @@ def _process_credit_card_payment(payment_data):
 
 def update_order(order_id, is_paid):
     """ Trigger order update once it is paid"""
-    pass
+    
+    response = requests.put(
+            'http://api-gateway:8080/store-manager-api/orders',
+            json={'order_id': order_id, 'is_paid': is_paid},
+            headers={'Content-Type': 'application/json'}
+        )
+    if response.status_code == 200:
+        logger.debug(f"Order {order_id} updated successfully in Store Manager. Is paid: {is_paid}")
+    else:
+        logger.error(f"Failed to update order {order_id} in Store Manager. Status code: {response.status_code}, Response: {response.text}")
+    
