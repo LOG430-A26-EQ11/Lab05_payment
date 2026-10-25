@@ -46,8 +46,7 @@ jobs:
       - name: Initialiser la base de données
         run: |
           mysql -h 127.0.0.1 -P 3306 -u root -p"$MYSQL_ROOT_PASSWORD" < db-init/init.sql
-          # La table stocks est créée avec MySQL Workbench dans le labo, donc on la crée ici pour le CI
-          mysql -h 127.0.0.1 -P 3306 -u root -p"$MYSQL_ROOT_PASSWORD" "$DB_NAME" -e "
+ 
 
       - name: Creer fichier .env
         run: |
