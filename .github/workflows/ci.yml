@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  DB_NAME: labo05_db
+  DB_NAME: labo05_payments_db
   DB_USER: ${{ secrets.DB_USER }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   MYSQL_ROOT_PASSWORD: root
@@ -20,7 +20,7 @@ jobs:
         image: mysql:8.4.7
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: labo05_db
+          MYSQL_DATABASE: labo05_payments_db
           MYSQL_USER: ${{ secrets.DB_USER }}
           MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
@@ -31,15 +31,6 @@ jobs:
           --health-timeout=5s
           --health-retries=10
 
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd="redis-cli ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
 
     steps:
       - uses: actions/checkout@v4
@@ -57,11 +48,6 @@ jobs:
           mysql -h 127.0.0.1 -P 3306 -u root -p"$MYSQL_ROOT_PASSWORD" < db-init/init.sql
           # La table stocks est créée avec MySQL Workbench dans le labo, donc on la crée ici pour le CI
           mysql -h 127.0.0.1 -P 3306 -u root -p"$MYSQL_ROOT_PASSWORD" "$DB_NAME" -e "
-            CREATE TABLE IF NOT EXISTS stocks (
-              product_id INT PRIMARY KEY,
-              quantity INT NOT NULL DEFAULT 0,
-              FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
-            );"
 
       - name: Creer fichier .env
         run: |
